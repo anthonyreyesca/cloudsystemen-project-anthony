@@ -16,13 +16,11 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: YOUR_PUBLIC_IP
+          host: ${{ secrets.AZURE_HOST }}
           username: azureuser
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/myapp
             git pull
-            docker build -t myapp .
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d --name myapp -p 3000:3000 myapp
+            docker-compose down
+            docker-compose up -d --build

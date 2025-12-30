@@ -1,12 +1,14 @@
 version: "3.8"
 
 services:
-  app:
+  node-app:
     build: .
     container_name: node-app
     restart: always
     expose:
       - "3000"
+    networks:
+      - web
 
   caddy:
     image: caddy:latest
@@ -20,8 +22,13 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
-      - app
+      - node-app
+    networks:
+      - web
 
 volumes:
   caddy_data:
   caddy_config:
+
+networks:
+  web:
